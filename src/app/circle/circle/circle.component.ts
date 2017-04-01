@@ -1,3 +1,4 @@
+import { CircleModule } from './../circle.module';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 
 @Component({
@@ -23,7 +24,7 @@ export class CircleComponent implements OnInit {
 
     /* Step2: Define the geometry and store it in buffer objects */
 
-    var vertices = [-0.5, 0.5, -0.5, -0.5, 0.0, -0.5,];
+    var vertices = [-0.5, 0.5, -0.5, -0.5, 0.0, -0.5,-0.5, 0.5,0.0, -0.5,1,1];
 
     // Create a new buffer object
     var vertex_buffer = gl.createBuffer();
@@ -111,8 +112,21 @@ export class CircleComponent implements OnInit {
     // Set the view port
     gl.viewport(0, 0, canvas.width, canvas.height);
 
+
+    function drawScene() {
+  
+    // Draw the geometry.
+    var primitiveType = gl.TRIANGLES;
+    var offset = 0;
+    var count = 6;
+    gl.drawArrays(primitiveType, offset, count);
+    }
+
+    new drawScene;
+
+
     // Draw the triangle
-    gl.drawArrays(gl.TRIANGLES, 0, 3);
+    //gl.drawArrays(gl.TRIANGLES, 0, 3);
   }
 
 
