@@ -17,7 +17,7 @@ export class CircleComponent implements OnInit {
     /* Step1: Prepare the canvas and get WebGL context */
 
     // var canvas = document.getElementById('my_Canvas');
-    let canvas = this.myCanvas.nativeElement.getContext("2d");
+    let canvas: any  = this.myCanvas.nativeElement;
     var gl = canvas.getContext('experimental-webgl');
 
 
