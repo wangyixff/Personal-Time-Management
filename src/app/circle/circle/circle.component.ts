@@ -26,52 +26,9 @@ export class CircleComponent implements OnInit {
   var gl = this.myCanvas.nativeElement.getContext('experimental-webgl');
      /*======= Defining and storing the geometry ======*/
 
-         var vertices = [
-           0,0,0,
-        
-           1*Math.cos(10),1*Math.sin(10),0,
-          1*Math.cos(10*2),1*Math.sin(10*2),0,
-          1*Math.cos(10*3),1*Math.sin(10*3),0,
-          1*Math.cos(10*4),1*Math.sin(10*4),0,
-          1*Math.cos(10*5),1*Math.sin(10*5),0,
-          1*Math.cos(10*6),1*Math.sin(10*6),0,
-          1*Math.cos(10*7),1*Math.sin(10*7),0,
-          1*Math.cos(10*8),1*Math.sin(10*8),0,
-          1*Math.cos(10*9),1*Math.sin(10*9),0,
-          1*Math.cos(10*10),1*Math.sin(10*10),0,
-          1*Math.cos(10*11),1*Math.sin(10*11),0,
-          
-          1*Math.cos(10*12),1*Math.sin(10*12),0,
-          1*Math.cos(10*13),1*Math.sin(10*13),0,
-          1*Math.cos(10*14),1*Math.sin(10*14),0,
-          1*Math.cos(10*15),1*Math.sin(10*15),0,
-          1*Math.cos(10*16),1*Math.sin(10*16),0,
-          1*Math.cos(10*17),1*Math.sin(10*17),0,
-          1*Math.cos(10*18),1*Math.sin(10*18),0,
-          1*Math.cos(10*19),1*Math.sin(10*19),0,
-          1*Math.cos(10*20),1*Math.sin(10*20),0,
-          1*Math.cos(10*21),1*Math.sin(10*21),0,
+   
 
-          1*Math.cos(10*22),1*Math.sin(10*22),0,
-          1*Math.cos(10*23),1*Math.sin(10*23),0,
-          1*Math.cos(10*24),1*Math.sin(10*24),0,
-          1*Math.cos(10*25),1*Math.sin(10*25),0,
-          1*Math.cos(10*26),1*Math.sin(10*26),0,
-          1*Math.cos(10*27),1*Math.sin(10*27),0,
-          1*Math.cos(10*28),1*Math.sin(10*28),0,
-          1*Math.cos(10*29),1*Math.sin(10*29),0,
-          1*Math.cos(10*30),1*Math.sin(10*30),0,
-          1*Math.cos(10*31),1*Math.sin(10*31),0,
-          //0,0,0,
-           // -0.4,0.8,0,
-           //-0.4,0.6,0,
-            //0.7,0.6,0 
-         ]
-          
-         var pi = 3.14159;
-var x = 2*pi/100;
-var y = 2*pi/100;
-var r = 0.5;
+var r=0.5;
 
 var vertices = [0,0,0]; //establish origin
 for(var i = 0.0; i <= 101; i++){
