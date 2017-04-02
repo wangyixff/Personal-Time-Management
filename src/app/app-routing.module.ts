@@ -9,6 +9,10 @@ const routes: Routes = [
     {
         path: 'playground',
         loadChildren: './playground/playground.module#PlaygroundModule'
+    },
+    {
+        path: '**',
+        redirectTo: ''
     }
 ];
 
