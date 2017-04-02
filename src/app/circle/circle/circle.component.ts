@@ -18,10 +18,6 @@ export class CircleComponent implements OnInit {
 
   
   ngOnInit() {
-  }
-  
-  
-  ngAfterViewInit() {
   
   var gl = this.myCanvas.nativeElement.getContext('experimental-webgl');
      /*======= Defining and storing the geometry ======*/
@@ -36,16 +32,16 @@ for(var i = 0.0; i <= 101; i++){
     
 }
 
-
-
-
-
+var vertices2 = [0,0,0]; //establish origin
+for(var i = 1; i <= 101; i++){
+    vertices2.push(r*Math.cos(2*i*Math.PI/100), r*Math.sin(2*i*Math.PI/100),0);
+    
+}
 
 
 
          // Create an empty buffer object
          var vertex_buffer = gl.createBuffer();
-
          // Bind appropriate array buffer to it
          gl.bindBuffer(gl.ARRAY_BUFFER, vertex_buffer);
       
@@ -76,7 +72,7 @@ for(var i = 0.0; i <= 101; i++){
          // Fragment shader source code
          var fragCode =
             'void main(void) {' +
-               'gl_FragColor = vec4(0.0, 0.0, 0.0, 0.1);' +
+               'gl_FragColor = vec4(0.0, 0.0, 0.0, 0.5);' +
             '}';
 
          // Create fragment shader object
@@ -137,20 +133,101 @@ for(var i = 0.0; i <= 101; i++){
 
          
          
-         gl.drawArrays(gl.TRIANGLE_FAN, 0, 102);
+         gl.drawArrays(gl.TRIANGLE_FAN, 0, 20);
 
          // POINTS, LINE_STRIP, LINE_LOOP, LINES,
          // TRIANGLE_STRIP,TRIANGLE_FAN, TRIANGLES  
+         this.ini_draw(gl, vertices, 80, 0.8);
 
+         this.ini_draw(gl, vertices, 90, 0.7);
 
+         this.ini_draw(gl, vertices, 100, 0.6);
 
-
-
-
-
-
-
+         this.ini_draw(gl, vertices, 102, 0.5);
  }
+
+ ini_draw (gl, vertices,percentage, color){
+
+         var colorSentence ='gl_FragColor = vec4('+ color.toString()+', 0.0, 0.0, 1.0);';
+
+
+            // Create an empty buffer object
+         var vertex_buffer = gl.createBuffer();
+         
+         // Bind appropriate array buffer to it
+         gl.bindBuffer(gl.ARRAY_BUFFER, vertex_buffer);
+      
+         // Pass the vertex data to the buffer
+         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+
+         // Unbind the buffer
+         gl.bindBuffer(gl.ARRAY_BUFFER, null);
+
+         /*=================== Shaders ====================*/
+
+         // Vertex shader source code
+         var vertCode =
+            'attribute vec3 coordinates;' +
+            'void main(void) {' +
+               ' gl_Position = vec4(coordinates, 1.0);' +
+            '}';
+
+         // Create a vertex shader object
+         var vertShader = gl.createShader(gl.VERTEX_SHADER);
+
+         // Attach vertex shader source code
+         gl.shaderSource(vertShader, vertCode);
+
+         // Compile the vertex shader
+         gl.compileShader(vertShader);
+
+         // Fragment shader source code
+         var fragCode =
+            'void main(void) {' +
+               colorSentence +
+            '}';
+
+         // Create fragment shader object
+         var fragShader = gl.createShader(gl.FRAGMENT_SHADER);
+
+         // Attach fragment shader source code
+         gl.shaderSource(fragShader, fragCode);
+
+         // Compile the fragmentt shader
+         gl.compileShader(fragShader);
+
+         // Create a shader program object to store
+         // the combined shader program
+         var shaderProgram = gl.createProgram();
+
+         // Attach a vertex shader
+         gl.attachShader(shaderProgram, vertShader);
+
+         // Attach a fragment shader
+         gl.attachShader(shaderProgram, fragShader);
+
+         // Link both the programs
+         gl.linkProgram(shaderProgram);
+
+         // Use the combined shader program object
+         gl.useProgram(shaderProgram);
+
+           // Bind vertex buffer object
+         gl.bindBuffer(gl.ARRAY_BUFFER, vertex_buffer);
+
+         // Get the attribute location
+         var coord = gl.getAttribLocation(shaderProgram, "coordinates");
+
+         // Point an attribute to the currently bound VBO
+         gl.vertexAttribPointer(coord, 3, gl.FLOAT, false, 0, 0);
+
+         // Enable the attribute
+         gl.enableVertexAttribArray(coord);
+
+          gl.drawArrays(gl.TRIANGLE_FAN, 0, percentage);
+
+}
+
 
 
 
