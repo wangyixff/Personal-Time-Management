@@ -28,7 +28,7 @@ export class CircleComponent implements OnInit {
 
          var vertices = [
            0,0,0,
-           1,0,0,
+        
            1*Math.cos(10),1*Math.sin(10),0,
           1*Math.cos(10*2),1*Math.sin(10*2),0,
           1*Math.cos(10*3),1*Math.sin(10*3),0,
@@ -68,6 +68,24 @@ export class CircleComponent implements OnInit {
             //0.7,0.6,0 
          ]
           
+         var pi = 3.14159;
+var x = 2*pi/100;
+var y = 2*pi/100;
+var r = 0.5;
+
+var vertices = [0,0,0]; //establish origin
+for(var i = 0.0; i <= 101; i++){
+    vertices.push(r*Math.cos(2*i*Math.PI/100), r*Math.sin(2*i*Math.PI/100),0);
+    
+}
+
+
+
+
+
+
+
+
          // Create an empty buffer object
          var vertex_buffer = gl.createBuffer();
 
@@ -158,10 +176,17 @@ export class CircleComponent implements OnInit {
          gl.viewport(0,0,this.width,this.height);
 
          // Draw the triangle
-         gl.drawArrays(gl.TRIANGLE_STRIP, 0, 31);
+
+
+         
+         
+         gl.drawArrays(gl.TRIANGLE_FAN, 0, 102);
 
          // POINTS, LINE_STRIP, LINE_LOOP, LINES,
          // TRIANGLE_STRIP,TRIANGLE_FAN, TRIANGLES  
+
+
+
 
 
 
