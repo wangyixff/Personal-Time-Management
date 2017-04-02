@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef, NgZone } from '@angular/core';
 
 declare var mat4: any;
-declare var request: any;
 
 @Component({
   selector: 'app-lesson3',
