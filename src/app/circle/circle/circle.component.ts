@@ -2,6 +2,7 @@ import { CircleModule } from './../circle.module';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 declare var THREE :any;
 declare var Stats :any;
+declare var webglUtils:any;
 @Component({
   selector: 'app-circle',
   templateUrl: './circle.component.html',
@@ -20,6 +21,8 @@ export class CircleComponent implements OnInit {
   ngOnInit() {
   
   var gl = this.myCanvas.nativeElement.getContext('experimental-webgl');
+  var gl2 = this.myCanvas2.nativeElement.getContext('experimental-webgl');
+  
      /*======= Defining and storing the geometry ======*/
 
    
@@ -117,7 +120,7 @@ for(var i = 1; i <= 101; i++){
          /*============ Drawing the triangle =============*/
 
          // Clear the canvas
-         gl.clearColor(0.5, 0.5, 0.5, 0.9);
+         gl.clearColor(1.0, 1.0, 1.0, 0.9);
 
          // Enable the depth test
          gl.enable(gl.DEPTH_TEST);
@@ -144,9 +147,25 @@ for(var i = 1; i <= 101; i++){
          this.ini_draw(gl, vertices, 100, 0.6);
 
          this.ini_draw(gl, vertices, 102, 0.5);
- }
+ 
+         //this.ini_draw(gl2,vertices, 50, 0.5);
+///playaround  
+var renderer=new THREE.WebGLRenderer({canvas: this.myCanvas2.nativeElement, antialias:true});
+renderer.setClearColor(0x00ff00);
+renderer.setSize(300, 300);
 
- ini_draw (gl, vertices,percentage, color){
+var camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.1, 300);
+
+var scene = new THREE.Scene();
+
+var geometry = new THREE.CubeGeometry(100,100,100);
+
+
+renderer.render(scene, camera);
+
+}
+
+ ini_draw (gl, vertices, percentage, color){
 
          var colorSentence ='gl_FragColor = vec4('+ color.toString()+', 0.0, 0.0, 1.0);';
 
@@ -227,6 +246,15 @@ for(var i = 1; i <= 101; i++){
           gl.drawArrays(gl.TRIANGLE_FAN, 0, percentage);
 
 }
+  
+
+
+
+
+
+
+
+
 
 
 
