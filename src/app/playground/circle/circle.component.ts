@@ -60,22 +60,29 @@ export class CircleComponent implements OnInit {
     return this.gl;
   }
 
-  getShader(gl, id, type = null) {
-    var shaderScript, theSource, currentChild, shader;
+  getShader(gl, id) {
+    let type = '';
+    let shader;
+    let theSource;
 
-    shaderScript = document.getElementById(id);console.log(shaderScript);
-
-    if (!shaderScript) {
-      return null;
-    }
-
-    theSource = shaderScript.text;
-
-    if (!type) {
-      if (shaderScript.type == 'x-shader/x-fragment') {
+    if (id) {
+      if (id == 'shader-fs') {
         type = gl.FRAGMENT_SHADER;
-      } else if (shaderScript.type == 'x-shader/x-vertex') {
+        theSource = `
+          void main(void) { 
+            gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0); 
+          }
+        `;
+      } else if (id == 'shader-vs') {
         type = gl.VERTEX_SHADER;
+        theSource = `
+          attribute vec3 aVertexPosition; 
+          uniform mat4 uMVMatrix; 
+          uniform mat4 uPMatrix; 
+          void main(void) { 
+            gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0); 
+          }
+        `;
       } else {
         // Unknown shader type
         return null;
