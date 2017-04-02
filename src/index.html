@@ -1,5 +1,6 @@
 <!doctype html>
 <html>
+
 <head>
   <meta charset="utf-8">
   <title>PersonalTimeManagement</title>
@@ -8,9 +9,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
 </head>
+
 <body>
   <app-root>Loading...</app-root>
   <script src="assets/js/three.min.js"></script>
   <script src="assets/js/stats.min.js"></script>
+  <script src="assets/js/sylvester.js"></script>
+  <script id="shader-fs" type="x-shader/x-fragment">
+    void main(void) { gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0); }
+  </script>
+
+  <script id="shader-vs" type="x-shader/x-vertex">
+    attribute vec3 aVertexPosition; uniform mat4 uMVMatrix; uniform mat4 uPMatrix; void main(void) { gl_Position = uPMatrix *
+    uMVMatrix * vec4(aVertexPosition, 1.0); }
+  </script>
 </body>
+
 </html>

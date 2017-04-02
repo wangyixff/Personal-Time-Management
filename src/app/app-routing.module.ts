@@ -7,7 +7,7 @@ const routes: Routes = [
         loadChildren: './circle/circle.module#CircleModule'
     },
     {
-        path: '',
+        path: 'playground',
         loadChildren: './playground/playground.module#PlaygroundModule'
     }
 ];
