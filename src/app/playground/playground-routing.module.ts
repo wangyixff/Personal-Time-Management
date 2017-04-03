@@ -22,6 +22,10 @@ const routes: Routes = [
   {
     path: 'lesson4',
     component: Lesson4Component
+  },
+  {
+    path: '3js',
+    loadChildren: "./threejs/threejs.module#ThreejsModule"
   }
 ];
 
