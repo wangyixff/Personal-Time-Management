@@ -12,6 +12,7 @@ export class Example1Component implements OnInit {
 
   renderer: THREE.Renderer;
   camera: THREE.Camera;
+  scene: THREE.Scene;
 
   constructor(
     private ngZone: NgZone
@@ -26,32 +27,29 @@ export class Example1Component implements OnInit {
   animate = () => {
 
   }
-
+ 
   init(canvas) {
     this.renderer = new THREE.WebGLRenderer({ canvas: canvas });
     this.renderer.setSize(canvas.width, canvas.height);
 
-    let camera = new THREE.PerspectiveCamera(45, canvas.width / canvas.height, 1, 500);
+    let camera = new THREE.PerspectiveCamera(45, canvas.width / canvas.height, 1, 400);
     camera.position.set(0, 0, 100);
     camera.lookAt(new THREE.Vector3(0, 0, 0));
-
-    let scene = new THREE.Scene();
-
-    // create circle
-    let geometry = new THREE.CircleBufferGeometry( 5, 32, Math.PI/2, Math.PI );
-    let material = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
+    this.scene = new THREE.Scene();
+    this.drawCircle(5);
+    this.renderer.render(this.scene, camera);
+  }
+  drawCircle(fanNumber) {
+     // create circle
+   
+    for(var i = 0; i < fanNumber; i++){
+    let geometry = new THREE.CircleBufferGeometry( 30, 100, Math.PI*2/fanNumber*i, Math.PI*2/fanNumber );
+    let material = new THREE.MeshBasicMaterial( { color: 0xffffe0-i*7000 } );
     let circle = new THREE.Mesh( geometry, material );
-    scene.add(circle);
-    
-    // create circle
-    let geometry2 = new THREE.CircleBufferGeometry( 5, 32, 0, Math.PI/2 );
-    let material2 = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-    let circle2 = new THREE.Mesh( geometry2, material2 );
-    scene.add(circle2);
+    this.scene.add(circle);
+    }
     
 
-
-    this.renderer.render(scene, camera);
   }
 
 }

@@ -1,8 +1,9 @@
 import { CircleModule } from './../circle.module';
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, NgZone } from '@angular/core';
 declare var THREE :any;
 declare var Stats :any;
 declare var webglUtils:any;
+declare var Detector: any;
 @Component({
   selector: 'app-circle',
   templateUrl: './circle.component.html',
@@ -15,10 +16,11 @@ export class CircleComponent implements OnInit {
   width= 300;
   height = 300;
    
-  constructor() { }
+  constructor(private ngZone: NgZone) { }
 
   
   ngOnInit() {
+    this.ngZone.runOutsideAngular(() => this.render1);
   
   var gl = this.myCanvas.nativeElement.getContext('experimental-webgl');
   var gl2 = this.myCanvas2.nativeElement.getContext('experimental-webgl');
@@ -150,20 +152,83 @@ for(var i = 1; i <= 101; i++){
  
          //this.ini_draw(gl2,vertices, 50, 0.5);
 ///playaround  
-var renderer=new THREE.WebGLRenderer({canvas: this.myCanvas2.nativeElement, antialias:true});
-renderer.setClearColor(0x00ff00);
-renderer.setSize(300, 300);
+this.renderer=new THREE.WebGLRenderer({canvas: this.myCanvas2.nativeElement, antialias:true});
+this.renderer.setClearColor(0x000000);
+this.renderer.setSize(300, 300);
 
-var camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.1, 300);
+this.camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.1, 300);
+this.camera.position.set(0,0,0);
+this.scene = new THREE.Scene();
 
-var scene = new THREE.Scene();
+var light = new THREE.AmbientLight(0xffffff,0.5);
+this.scene.add(light);
+var light1 = new THREE.PointLight(0xffffff,0.5);
+this.scene.add(light1);
 
-var geometry = new THREE.CubeGeometry(100,100,100);
 
 
-renderer.render(scene, camera);
+//var geometry = new THREE.CubeGeometry(50,50,50);
+var geometry = new THREE.Geometry();
+geometry.vertices.push(
+  new THREE.Vector3(-10,10,0),
+  new THREE.Vector3(-10,-10,0),
+  new THREE.Vector3(10,-10,0),
+  
+)
+geometry.faces.push(new THREE.Face3(0,1,2));
+
+// var loader = new THREE.FontLoader();
+// loader.load( 'assets/font/helvetiker_bold.typeface.json', function ( font ) {
+
+//     var textGeo = new THREE.TextGeometry( "My Text", {
+
+//         font: font,
+
+//         size: 20,
+//         height: 50,
+//         curveSegments: 12,
+
+//         bevelThickness: 2,
+//         bevelSize: 5,
+//         bevelEnabled: true
+
+//     } );
+
+//     var textMaterial = new THREE.MeshPhongMaterial( { color: 0xffff00 } );
+
+//     var mesh2 = new THREE.Mesh( textGeo, textMaterial );
+//     mesh2.position.set( 0, 0, -10 );
+//     var scene2 = new THREE.Scene();
+//     scene2.add( mesh2 );
+
+// } );
+
+
+var material = new THREE.MeshLambertMaterial({color:0xF3FFE2});
+this.mesh = new THREE.Mesh(geometry,material);
+this.mesh.position.set(0,0,-200);
+
+this.scene.add(this.mesh);
+this.renderer.render(this.scene, this.camera);
+
+
+
+this.running = true;
+requestAnimationFrame(this.render1);
+
+
+
+
 
 }
+
+
+renderer;
+camera;
+scene;
+mesh;
+running: boolean = false;
+textMesh;
 
  ini_draw (gl, vertices, percentage, color){
 
@@ -246,7 +311,21 @@ renderer.render(scene, camera);
           gl.drawArrays(gl.TRIANGLE_FAN, 0, percentage);
 
 }
+
   
+render1 = () => {
+  if(this.running){
+    this.mesh.rotation.x += 0.01;
+    this.mesh.rotation.y += 0.01;
+    this.renderer.render(this.scene, this.camera);
+    requestAnimationFrame(this.render1);
+  
+  }
+}
+
+
+
+
 
 
 
