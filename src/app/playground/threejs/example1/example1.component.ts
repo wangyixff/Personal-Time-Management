@@ -59,6 +59,7 @@ export class Example1Component implements OnInit {
 
   init(canvas) {
     this.renderer = new THREE.WebGLRenderer({ canvas: canvas });
+    this.renderer.setClearColor( 0xffffff, 1 );
     this.renderer.setSize(canvas.width, canvas.height);
 
     this.camera = new THREE.PerspectiveCamera(45, canvas.width / canvas.height, 1, 400);
