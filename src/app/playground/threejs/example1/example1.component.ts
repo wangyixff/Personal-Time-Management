@@ -52,11 +52,26 @@ export class Example1Component implements OnInit {
 
     this.mouse.x = 1;
     this.mouse.y = 1;
+
+    //this.camera.position.x=(10*Math.PI/180);
+   // this.camera.rotation.y=(20*Math.PI/180,0);
+    //this.camera.rotation.z=(90*Math.PI/180,0);
+    
     this.renderer.render(this.scene, this.camera);
 
-    requestAnimationFrame( this.animate );
-  }
 
+//this.camera.position.set(10, 10, 0);
+    requestAnimationFrame( this.animate );
+    
+    this.j=(this.j+1)%360;
+    let rad = this.j * Math.PI / 180;
+    this.camera.position.set(0, 100 * Math.sin(rad), 100 * Math.cos(rad));
+    this.camera.lookAt(new THREE.Vector3(0, 0, 0));
+
+    //this.camera.rotateY(this.j);
+    //this.camera.rotateZ(this.j*100);
+  }
+ j=0;
   init(canvas) {
     this.renderer = new THREE.WebGLRenderer({ canvas: canvas });
     this.renderer.setClearColor( 0xffffff, 1 );
@@ -98,5 +113,8 @@ export class Example1Component implements OnInit {
     this.mouse.x = ($event.clientX / this.myCanvas.nativeElement.width) * 2 - 1;
     this.mouse.y = - ($event.clientY / this.myCanvas.nativeElement.height) * 2 + 1;
   }
+
+
+
 
 }
