@@ -63,10 +63,11 @@ export class Example1Component implements OnInit {
 //this.camera.position.set(10, 10, 0);
     requestAnimationFrame( this.animate );
     
-    this.j=(this.j+1)%360;
-    let rad = this.j * Math.PI / 180;
+    this.j=(this.j+0.2)%360;
+    let rad = (this.j) * Math.PI / 180;
     this.camera.position.set(0, 100 * Math.sin(rad), 100 * Math.cos(rad));
-    this.camera.lookAt(new THREE.Vector3(0, 0, 0));
+    //this.camera.lookAt(new THREE.Vector3(0, 0, 0));
+    this.camera.rotation.x=-this.j/180*Math.PI;
 
     //this.camera.rotateY(this.j);
     //this.camera.rotateZ(this.j*100);
@@ -98,6 +99,7 @@ export class Example1Component implements OnInit {
     for (var i = 0; i < fanNumber; i++) {
       let geometry = new THREE.CircleGeometry(30, 24, Math.PI * 2 / fanNumber * i, Math.PI * 2 / fanNumber);
       let material = new THREE.MeshBasicMaterial({ color: 0xffffe0 - i * 7000 });
+      material.side=THREE.DoubleSide;
       let circle = new THREE.Mesh(geometry, material);
       let myCircle = new MyCircle(circle);
       myCircle.url = ['', 'playground', 'lesson' + i];
