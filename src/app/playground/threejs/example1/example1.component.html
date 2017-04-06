@@ -1,5 +1,5 @@
 <canvas #myCanvas width="600" height="600"
   (click)="onMouseClick($event)"
-  (mousemove)="onMouseMove($event)"></canvas>
-
-  document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+  (mousedown)="onMouseDown($event)"
+  (mousemove)="onMouseMove($event)"
+  (mouseup)="onMouseUp($event)"></canvas>
