@@ -165,7 +165,7 @@ export class Example1Component implements OnInit {
     if(this.dragFlag){
       let angleUnit = Math.PI / 600 ;
       let distance = Math.sqrt(Math.pow(this.mouseDown.x - this.mouseMove.x, 2) + Math.pow(this.mouseDown.y - this.mouseMove.y, 2));
-      let direction = this.mouseMove.x - this.mouseDown.x > 0 ? 1 : -1;
+      let direction = this.mouseMove.x - this.mouseDown.x > 0 ? -1 : 1;
       let deltaAngle = angleUnit * distance * direction;
       this.camera.position.set(100*Math.sin(this.angle + deltaAngle), 0, 100*Math.cos(this.angle + deltaAngle));
       this.camera.rotation.y = (this.angle + deltaAngle);
