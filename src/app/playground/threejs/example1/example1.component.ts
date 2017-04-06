@@ -22,6 +22,7 @@ export class Example1Component implements OnInit {
   renderer: THREE.WebGLRenderer;
   camera: THREE.Camera;
   scene: THREE.Scene;
+  projector: THREE.Projector;
 
   objects: any[] = [];
   raycaster: THREE.Raycaster;
@@ -52,15 +53,9 @@ export class Example1Component implements OnInit {
 
     this.mouse.x = 1;
     this.mouse.y = 1;
-
-    //this.camera.position.x=(10*Math.PI/180);
-   // this.camera.rotation.y=(20*Math.PI/180,0);
-    //this.camera.rotation.z=(90*Math.PI/180,0);
     
     this.renderer.render(this.scene, this.camera);
 
-
-//this.camera.position.set(10, 10, 0);
     requestAnimationFrame( this.animate );
     
     this.j=(this.j+0.2)%360;
@@ -109,13 +104,30 @@ export class Example1Component implements OnInit {
 
   }
 
-  onMouseMove($event) {
+  onMouseClick($event) {
     // calculate mouse position in normalized device coordinates
     // (-1 to +1) for both components 
     this.mouse.x = ($event.clientX / this.myCanvas.nativeElement.width) * 2 - 1;
     this.mouse.y = - ($event.clientY / this.myCanvas.nativeElement.height) * 2 + 1;
   }
 
+
+
+  onMouseDown($event) {
+    // will stop any other event from firing such as the mouse's Trackball controls   
+    //event.preventDefault();
+    this.mouse.x = ($event.clientX / this.myCanvas.nativeElement.width) * 2 - 1;
+    this.mouse.y = - ($event.clientY / this.myCanvas.nativeElement.height) * 2 + 1;
+    var vector = new THREE.Vector3(
+        ( $event.clientX / window.innerWidth ) * 2 - 1,
+      - ( $event.clientY / window.innerHeight ) * 2 + 1,0.5);
+    this.projector.unprojectVector( vector, this.camera );
+
+    var ray = new THREE.Ray( camera.position, 
+                             vector.subSelf( camera.position ).normalize() );
+
+
+  } 
 
 
 
