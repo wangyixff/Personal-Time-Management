@@ -28,8 +28,10 @@ export class Example1Component implements OnInit {
   raycaster: THREE.Raycaster;
   mouse: { x: number, y: number } = {x: 1, y: 1};
 
+  //myCircle: MyCircle;
   // camera rotation
   angle: number = 0;
+  axe: THREE.Object3D;
 
   // flags
   selectFlag: boolean = false;
@@ -169,6 +171,25 @@ export class Example1Component implements OnInit {
       let deltaAngle = angleUnit * distance * direction;
       this.camera.position.set(100*Math.sin(this.angle + deltaAngle), 0, 100*Math.cos(this.angle + deltaAngle));
       this.camera.rotation.y = (this.angle + deltaAngle);
+     // this.camera.rotation.x=(100*Math.sin(this.angle + deltaAngle))
+      
+      var vector = new THREE.Vector3( -1, 1, 0 );
+      let children = this.scene.children; //console.log(children);
+      children.forEach((mesh: MyCircle) => {
+         this.rotateAroundWorldAxis(mesh, vector, this.angle + deltaAngle); 
+      });
+      
+      
+
+      //var axis = new THREE.Vector3( 0, 1, 0 );
+      //var angle = Math.PI / 4;
+      //vector.applyAxisAngle( axis, angle );
+
+     // this.axe = THREE.AxisHelper. Vector3( length, 0, 0 ), 0xFF0000, false ) ); // +X
+
+      
+      
+      
       // this.camera.lookAt(new THREE.Vector3(0, 0, 0));
 
       if(this.mouseUpFlag){
@@ -179,6 +200,18 @@ export class Example1Component implements OnInit {
       }
     }
   }
+
+  rotWorldMatrix: any;
+// Rotate an object around an arbitrary axis in world space       
+ rotateAroundWorldAxis(object, axis, radians) {
+    this.rotWorldMatrix = new THREE.Matrix4();
+    this.rotWorldMatrix.makeRotationAxis(axis.normalize(), radians);
+    // new code for Three.JS r55+:
+    this.rotWorldMatrix.multiply(object.matrix);                // pre-multiply
+    object.matrix = this.rotWorldMatrix;
+    // code for r59+:
+    object.rotation.setFromRotationMatrix(object.matrix);
+}
 
 
 }
