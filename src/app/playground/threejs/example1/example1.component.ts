@@ -3,11 +3,13 @@ import { Component, OnInit, ViewChild, ElementRef, NgZone } from '@angular/core'
 import * as THREE from 'three';
 
 class MyCircle extends THREE.Mesh {
-  constructor(mesh){
-    super(mesh.geometry, mesh.material);
-  }
-
   url: string[];
+  preMatrix: THREE.Matrix4;
+
+  constructor(mesh) {
+    super(mesh.geometry, mesh.material);
+    this.preMatrix  = new THREE.Matrix4();
+  }
 }
 
 @Component({
@@ -26,7 +28,7 @@ export class Example1Component implements OnInit {
 
   objects: any[] = [];
   raycaster: THREE.Raycaster;
-  mouse: { x: number, y: number } = {x: 1, y: 1};
+  mouse: { x: number, y: number } = { x: 1, y: 1 };
 
   //myCircle: MyCircle;
   // camera rotation
@@ -58,11 +60,11 @@ export class Example1Component implements OnInit {
     // drag
     this.drag();
 
-    
+
     this.renderer.render(this.scene, this.camera);
 
-    requestAnimationFrame( this.animate );
-    
+    requestAnimationFrame(this.animate);
+
     // this.j=(this.j+0.2)%360;
     // let rad = (this.j) * Math.PI / 180;
     // this.camera.position.set(0, 100 * Math.sin(rad), 100 * Math.cos(rad));
@@ -72,10 +74,12 @@ export class Example1Component implements OnInit {
     //this.camera.rotateY(this.j);
     //this.camera.rotateZ(this.j*100);
   }
- j=0;
+  j = 0;
+
+
   init(canvas) {
     this.renderer = new THREE.WebGLRenderer({ canvas: canvas });
-    this.renderer.setClearColor( 0xffffff, 1 );
+    this.renderer.setClearColor(0xffffff, 1);
     this.renderer.setSize(canvas.width, canvas.height);
 
     this.camera = new THREE.PerspectiveCamera(45, canvas.width / canvas.height, 1, 400);
@@ -91,15 +95,20 @@ export class Example1Component implements OnInit {
     this.raycaster = new THREE.Raycaster();
     this.raycaster.setFromCamera(this.mouse, this.camera);
 
+    // rotation
+    this.rotWorldMatrix = new THREE.Matrix4();
+
     this.animate();
   }
+
+
   drawCircle(fanNumber) {
     // create circle
 
     for (var i = 0; i < fanNumber; i++) {
       let geometry = new THREE.CircleGeometry(30, 24, Math.PI * 2 / fanNumber * i, Math.PI * 2 / fanNumber);
       let material = new THREE.MeshBasicMaterial({ color: 0xffffe0 - i * 7000 });
-      material.side=THREE.DoubleSide;
+      material.side = THREE.DoubleSide;
       let circle = new THREE.Mesh(geometry, material);
       let myCircle = new MyCircle(circle);
       myCircle.url = ['', 'playground', 'lesson' + i];
@@ -112,13 +121,13 @@ export class Example1Component implements OnInit {
   onMouseClick($event: MouseEvent) {
     // calculate mouse position in normalized device coordinates
     // (-1 to +1) for both components 
-    this.mouse.x = ($event.clientX / this.myCanvas.nativeElement.width) * 2 - 1;
-    this.mouse.y = - ($event.clientY / this.myCanvas.nativeElement.height) * 2 + 1;
+    // this.mouse.x = ($event.clientX / this.myCanvas.nativeElement.width) * 2 - 1;
+    // this.mouse.y = - ($event.clientY / this.myCanvas.nativeElement.height) * 2 + 1;
     // this.selectFlag = true;
   }
 
 
-  mouseDown: {x: number, y: number} = {x: 0, y: 0};
+  mouseDown: { x: number, y: number } = { x: 0, y: 0 };
   onMouseDown($event: MouseEvent) {
     // console.log($event, $event.clientY);
     // get coordinates
@@ -128,27 +137,27 @@ export class Example1Component implements OnInit {
     this.mouseDownFlag = true;
   }
 
-  mouseMove: {x: number, y: number} = {x: 0, y: 0};
-  onMouseMove($event: MouseEvent){
+  mouseMove: { x: number, y: number } = { x: 0, y: 0 };
+  onMouseMove($event: MouseEvent) {
     // console.log($event.clientX);
     // get coordinates
     this.mouseMove.x = $event.clientX;
-    this.mouseMove.y = $event.clientY;
+    this.mouseMove.y = $event.clientY;console.log($event);
     // dragFlag
-    if(this.mouseDownFlag){
+    if (this.mouseDownFlag) {
       this.dragFlag = true;
     }
   }
 
-  onMouseUp($event: MouseEvent){
+  onMouseUp($event: MouseEvent) {
     // reset mouseDownFlag
     this.mouseDownFlag = false;
     // set mouseUpFlag
     this.mouseUpFlag = true;
   }
 
-  select(){
-    if(this.selectFlag){
+  select() {
+    if (this.selectFlag) {
       // update the picking ray with the camera and mouse position
       this.raycaster.setFromCamera(this.mouse, this.camera);
 
@@ -162,39 +171,39 @@ export class Example1Component implements OnInit {
     }
   }
 
-  drag(){
+  drag() {
     // check flag
-    if(this.dragFlag){
-      let angleUnit = Math.PI / 600 ;
+    if (this.dragFlag) {
+      let angleUnit = Math.PI / 50;
       let distance = Math.sqrt(Math.pow(this.mouseDown.x - this.mouseMove.x, 2) + Math.pow(this.mouseDown.y - this.mouseMove.y, 2));
-      let direction = this.mouseMove.x - this.mouseDown.x > 0 ? -1 : 1;
+      let direction = this.mouseMove.x - this.mouseDown.x > 0 ? 1 : 1;
       let deltaAngle = angleUnit * distance * direction;
-      this.camera.position.set(100*Math.sin(this.angle + deltaAngle), 0, 100*Math.cos(this.angle + deltaAngle));
-      this.camera.rotation.y = (this.angle + deltaAngle);
-     // this.camera.rotation.x=(100*Math.sin(this.angle + deltaAngle))
-      
-      var vector = new THREE.Vector3( -1, 1, 0 );
-      let children = this.scene.children; //console.log(children);
-      children.forEach((mesh: MyCircle) => {
-         this.rotateAroundWorldAxis(mesh, vector, this.angle + deltaAngle); 
-      });
-      
-      
+      // this.camera.position.set(100*Math.sin(this.angle + deltaAngle), 0, 100*Math.cos(this.angle + deltaAngle));
+      // this.camera.rotation.y = (this.angle + deltaAngle);
+      // this.camera.rotation.x=(100*Math.sin(this.angle + deltaAngle))
 
-      //var axis = new THREE.Vector3( 0, 1, 0 );
-      //var angle = Math.PI / 4;
-      //vector.applyAxisAngle( axis, angle );
+      let children = this.scene.children;
+      var axis = new THREE.Vector3((this.mouseMove.y - this.mouseDown.y), (this.mouseMove.x - this.mouseDown.x), 0);
+      let deltaMatrix, rotatedMatrix, cloneMatrix;
+      if (distance > 0) {
+        deltaMatrix = new THREE.Matrix4();
+        deltaMatrix.makeRotationAxis(axis.normalize(), deltaAngle);
+        rotatedMatrix = new THREE.Matrix4();
+        children.forEach((mesh: MyCircle) => {
+          // mesh.rotation.setFromRotationMatrix(rotatedMatrix);
+          cloneMatrix = mesh.preMatrix.clone();
+          rotatedMatrix = cloneMatrix.multiply(deltaMatrix);
+          mesh.rotation.setFromRotationMatrix(deltaMatrix);
+        });
+      }
 
-     // this.axe = THREE.AxisHelper. Vector3( length, 0, 0 ), 0xFF0000, false ) ); // +X
 
-      
-      
-      
-      // this.camera.lookAt(new THREE.Vector3(0, 0, 0));
-
-      if(this.mouseUpFlag){
+      if (this.mouseUpFlag) {
         // store angle
-        this.angle = this.angle + deltaAngle;
+        children.forEach((mesh: MyCircle) => {
+          // mesh.matrix = mesh.preMatrix.multiply(deltaMatrix);
+          mesh.rotateOnAxis(axis.normalize(), deltaAngle);
+        });console.log("update prematrix");
         this.mouseUpFlag = false;
         this.dragFlag = false;
       }
@@ -202,16 +211,16 @@ export class Example1Component implements OnInit {
   }
 
   rotWorldMatrix: any;
-// Rotate an object around an arbitrary axis in world space       
- rotateAroundWorldAxis(object, axis, radians) {
+  // Rotate an object around an arbitrary axis in world space       
+  rotateAroundWorldAxis(object, axis, radians) {
     this.rotWorldMatrix = new THREE.Matrix4();
     this.rotWorldMatrix.makeRotationAxis(axis.normalize(), radians);
     // new code for Three.JS r55+:
-    this.rotWorldMatrix.multiply(object.matrix);                // pre-multiply
-    object.matrix = this.rotWorldMatrix;
+    // this.rotWorldMatrix.multiply(object.matrix);                // pre-multiply
+    // object.matrix = this.rotWorldMatrix;
     // code for r59+:
-    object.rotation.setFromRotationMatrix(object.matrix);
-}
+    object.rotation.setFromRotationMatrix(this.rotWorldMatrix);
+  }
 
 
 }
