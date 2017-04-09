@@ -60,7 +60,7 @@ export class Example1Component implements OnInit {
     this.select();
 
     // drag
-    this.drag();
+    // this.drag();
 
 
     this.renderer.render(this.scene, this.camera);
@@ -142,10 +142,16 @@ export class Example1Component implements OnInit {
   mouseMove: { x: number, y: number } = { x: 0, y: 0 };
   previousMousePosition: {x: number, y: number} = {x: 0, y: 0};
   onMouseMove($event: MouseEvent) {
-    // console.log($event.clientX);
     // get coordinates
     this.mouseMove.x = $event.clientX;
     this.mouseMove.y = $event.clientY;
+
+    // drag
+    this.drag();
+
+    this.previousMousePosition.x = this.mouseMove.x;
+    this.previousMousePosition.y = this.mouseMove.y;
+
     // dragFlag
     if (this.mouseDownFlag) {
       this.dragFlag = true;
@@ -175,15 +181,15 @@ export class Example1Component implements OnInit {
   }
 
   toRadians(distance){
-    return Math.PI * distance / 600;
+    return Math.PI * distance / 180;
   }
 
   drag() {
     // check flag
     if (this.dragFlag) {
       let deltaMove = {
-        x: this.mouseMove.x - this.mouseDown.x,
-        y: this.mouseMove.y - this.mouseDown.y
+        x: this.mouseMove.x - this.previousMousePosition.x,
+        y: this.mouseMove.y - this.previousMousePosition.y
       };
 
       let deltaRotationQuaternion = new THREE.Quaternion()
@@ -198,7 +204,7 @@ export class Example1Component implements OnInit {
 
       let children = this.scene.children;
       children.forEach((mesh: MyCircle) => {
-        mesh.quaternion.multiplyQuaternions(deltaRotationQuaternion, mesh.preQuaternion);
+        mesh.quaternion.multiplyQuaternions(deltaRotationQuaternion, mesh.quaternion);
       });
 
       // rotate on axis: when the pie spins, the axis is weird
