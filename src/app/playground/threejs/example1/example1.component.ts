@@ -5,10 +5,12 @@ import * as THREE from 'three';
 class MyCircle extends THREE.Mesh {
   url: string[];
   preMatrix: THREE.Matrix4;
+  preQuaternion: THREE.Quaternion;
 
   constructor(mesh) {
     super(mesh.geometry, mesh.material);
     this.preMatrix  = new THREE.Matrix4();
+    this.preQuaternion = new THREE.Quaternion();
   }
 }
 
@@ -196,39 +198,41 @@ export class Example1Component implements OnInit {
 
       let children = this.scene.children;
       children.forEach((mesh: MyCircle) => {
-        mesh.quaternion.multiplyQuaternions(deltaRotationQuaternion, mesh.quaternion);
+        mesh.quaternion.multiplyQuaternions(deltaRotationQuaternion, mesh.preQuaternion);
       });
 
-      // let angleUnit = Math.PI / 50;
+      // rotate on axis: when the pie spins, the axis is weird
+      // let angleUnit = Math.PI / 300;
       // let distance = Math.sqrt(Math.pow(this.mouseDown.x - this.mouseMove.x, 2) + Math.pow(this.mouseDown.y - this.mouseMove.y, 2));
       // let direction = this.mouseMove.x - this.mouseDown.x > 0 ? 1 : 1;
       // let deltaAngle = angleUnit * distance * direction;
-      // // this.camera.position.set(100*Math.sin(this.angle + deltaAngle), 0, 100*Math.cos(this.angle + deltaAngle));
-      // // this.camera.rotation.y = (this.angle + deltaAngle);
-      // // this.camera.rotation.x=(100*Math.sin(this.angle + deltaAngle))
 
       // let children = this.scene.children;
-      // var axis = new THREE.Vector3((this.mouseMove.y - this.mouseDown.y), (this.mouseMove.x - this.mouseDown.x), 0);
+      // var axis = new THREE.Vector3((this.mouseMove.y - this.mouseDown.y), -(this.mouseMove.x - this.mouseDown.x), 0);
       // let deltaMatrix, rotatedMatrix, cloneMatrix;
       // if (distance > 0) {
       //   deltaMatrix = new THREE.Matrix4();
       //   deltaMatrix.makeRotationAxis(axis.normalize(), deltaAngle);
-      //   rotatedMatrix = new THREE.Matrix4();
       //   children.forEach((mesh: MyCircle) => {
       //     // mesh.rotation.setFromRotationMatrix(rotatedMatrix);
+      //     rotatedMatrix = new THREE.Matrix4();
       //     cloneMatrix = mesh.preMatrix.clone();
       //     rotatedMatrix = cloneMatrix.multiply(deltaMatrix);
-      //     mesh.rotation.setFromRotationMatrix(deltaMatrix);
+      //     mesh.rotation.setFromRotationMatrix(rotatedMatrix);
       //   });
       // }
 
 
       if (this.mouseUpFlag) {
         // store angle
+        // rotate on axis
+        // children.forEach((mesh: MyCircle) => {
+        //   mesh.preMatrix = mesh.preMatrix.multiply(deltaMatrix);
+        // });
+
         children.forEach((mesh: MyCircle) => {
-          // mesh.matrix = mesh.preMatrix.multiply(deltaMatrix);
-          // mesh.rotateOnAxis(axis.normalize(), deltaAngle);
-        });console.log("update prematrix");
+          mesh.preQuaternion.multiplyQuaternions(deltaRotationQuaternion, mesh.preQuaternion);
+        });
         this.mouseUpFlag = false;
         this.dragFlag = false;
       }
