@@ -97,9 +97,6 @@ export class Example1Component implements OnInit {
     this.raycaster = new THREE.Raycaster();
     this.raycaster.setFromCamera(this.mouse, this.camera);
 
-    // rotation
-    this.rotWorldMatrix = new THREE.Matrix4();
-
     this.animate();
   }
 
@@ -206,55 +203,11 @@ export class Example1Component implements OnInit {
       children.forEach((mesh: MyCircle) => {
         mesh.quaternion.multiplyQuaternions(deltaRotationQuaternion, mesh.quaternion);
       });
-
-      // rotate on axis: when the pie spins, the axis is weird
-      // let angleUnit = Math.PI / 300;
-      // let distance = Math.sqrt(Math.pow(this.mouseDown.x - this.mouseMove.x, 2) + Math.pow(this.mouseDown.y - this.mouseMove.y, 2));
-      // let direction = this.mouseMove.x - this.mouseDown.x > 0 ? 1 : 1;
-      // let deltaAngle = angleUnit * distance * direction;
-
-      // let children = this.scene.children;
-      // var axis = new THREE.Vector3((this.mouseMove.y - this.mouseDown.y), -(this.mouseMove.x - this.mouseDown.x), 0);
-      // let deltaMatrix, rotatedMatrix, cloneMatrix;
-      // if (distance > 0) {
-      //   deltaMatrix = new THREE.Matrix4();
-      //   deltaMatrix.makeRotationAxis(axis.normalize(), deltaAngle);
-      //   children.forEach((mesh: MyCircle) => {
-      //     // mesh.rotation.setFromRotationMatrix(rotatedMatrix);
-      //     rotatedMatrix = new THREE.Matrix4();
-      //     cloneMatrix = mesh.preMatrix.clone();
-      //     rotatedMatrix = cloneMatrix.multiply(deltaMatrix);
-      //     mesh.rotation.setFromRotationMatrix(rotatedMatrix);
-      //   });
-      // }
-
-
       if (this.mouseUpFlag) {
-        // store angle
-        // rotate on axis
-        // children.forEach((mesh: MyCircle) => {
-        //   mesh.preMatrix = mesh.preMatrix.multiply(deltaMatrix);
-        // });
-
-        children.forEach((mesh: MyCircle) => {
-          mesh.preQuaternion.multiplyQuaternions(deltaRotationQuaternion, mesh.preQuaternion);
-        });
         this.mouseUpFlag = false;
         this.dragFlag = false;
       }
     }
-  }
-
-  rotWorldMatrix: any;
-  // Rotate an object around an arbitrary axis in world space       
-  rotateAroundWorldAxis(object, axis, radians) {
-    this.rotWorldMatrix = new THREE.Matrix4();
-    this.rotWorldMatrix.makeRotationAxis(axis.normalize(), radians);
-    // new code for Three.JS r55+:
-    // this.rotWorldMatrix.multiply(object.matrix);                // pre-multiply
-    // object.matrix = this.rotWorldMatrix;
-    // code for r59+:
-    object.rotation.setFromRotationMatrix(this.rotWorldMatrix);
   }
 
 
