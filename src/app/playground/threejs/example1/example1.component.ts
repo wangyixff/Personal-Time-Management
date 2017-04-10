@@ -22,7 +22,7 @@ class MyCircle extends THREE.Mesh {
 export class Example1Component implements OnInit {
 
   @ViewChild("myCanvas") myCanvas: ElementRef;
-
+  @ViewChild("bitmap") bitmap: ElementRef;
   renderer: THREE.WebGLRenderer;
   camera: THREE.Camera;
   scene: THREE.Scene;
@@ -33,6 +33,8 @@ export class Example1Component implements OnInit {
   mouse: { x: number, y: number } = { x: 1, y: 1 };
 
   //myCircle: MyCircle;
+  texture1: any;
+
   // camera rotation
   angle: number = 0;
   axe: THREE.Object3D;
@@ -113,7 +115,8 @@ export class Example1Component implements OnInit {
       myCircle.url = ['', 'playground', 'lesson' + i];
       this.scene.add(myCircle);
     }
-
+    this.initialBitmap();
+    this.scene.add(this.texture1);
 
   }
 
@@ -209,6 +212,25 @@ export class Example1Component implements OnInit {
       }
     }
   }
+
+//create image
+initialBitmap(){
+var g = this.bitmap.nativeElement.getContext('2d');
+//bitmap.width = 100;
+//bitmap.height = 100;
+g.font = 'Bold 20px Arial';
+
+g.fillStyle = 'white';
+g.fillText("hello world", 0, 20);
+g.strokeStyle = 'black';
+g.strokeText("hello world", 0, 20);
+
+// canvas contents will be used for a texture
+this.texture1 = new THREE.Texture(this.bitmap.nativeElement) 
+this.texture1.needsUpdate = true;
+}
+
+
 
 
 }
